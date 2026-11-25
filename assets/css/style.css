@@ -1,0 +1,635 @@
+/* ============================================================
+   MY LITTLE PLUSHIE - estilos de página y animaciones del monito
+   El personaje NO se define aquí: solo se animan sus grupos SVG.
+   ============================================================ */
+
+:root {
+  --brown: #A87959;
+  --brown-dark: #76513E;
+  --brown-light: #C99C78;
+  --cream: #F6E5CF;
+  --pink: #EFA6B5;
+  --ink: #30231F;
+  --paper: #FFF9F2;
+  --shadow: rgba(74, 45, 32, .18);
+}
+
+* { box-sizing: border-box; }
+
+html, body { min-height: 100%; }
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+  color: #4A3327;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255,255,255,.95) 0 14%, transparent 42%),
+    radial-gradient(circle at 88% 16%, rgba(239,166,181,.28) 0 12%, transparent 40%),
+    linear-gradient(160deg, #FFF7EF 0%, #F6E3D1 52%, #EFD1BC 100%);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: clamp(20px, 3.6vw, 48px) clamp(16px, 3vw, 34px) 60px;
+}
+
+.page-header { text-align: center; margin-bottom: clamp(20px, 3vw, 34px); }
+
+.eyebrow {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(168,121,89,.22);
+  font-size: .74rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--brown-dark);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -.03em;
+  color: var(--brown-dark);
+  text-shadow: 0 3px 0 rgba(255,255,255,.8);
+}
+
+.page-header h1 span { color: var(--pink); }
+
+.subtitle {
+  margin: 12px auto 0;
+  max-width: 560px;
+  font-size: clamp(.95rem, 2.2vw, 1.08rem);
+  line-height: 1.6;
+  color: #7A5844;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .82fr);
+  gap: clamp(18px, 2.6vw, 30px);
+  align-items: start;
+}
+
+.card {
+  background: rgba(255, 252, 247, .86);
+  border: 1px solid rgba(168, 121, 89, .18);
+  border-radius: 28px;
+  box-shadow: 0 18px 45px var(--shadow), inset 0 1px 0 rgba(255,255,255,.9);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* ---------- Escenario ---------- */
+.stage-card { position: relative; padding: 14px 14px 6px; overflow: hidden; }
+
+.stage-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 88%, rgba(246,229,207,.95) 0 24%, transparent 55%),
+    radial-gradient(circle at 18% 20%, rgba(255,255,255,.7) 0 8%, transparent 26%);
+}
+
+.stage-toolbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px 0;
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #9A745B;
+}
+
+.state-pill {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #FFF3E8;
+  border: 1px solid rgba(168,121,89,.22);
+  color: var(--brown-dark);
+  font-weight: 700;
+}
+
+.monkey-stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: min(68vh, 540px);
+  padding: 6px 0 0;
+}
+
+.monkey-svg {
+  display: block;
+  width: min(100%, 430px);
+  height: auto;
+  overflow: visible;
+  cursor: pointer;
+  outline: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  filter: drop-shadow(0 12px 18px rgba(74,45,32,.08));
+}
+
+.monkey-svg:focus-visible { outline: 3px dashed var(--pink); outline-offset: 6px; border-radius: 40%; }
+
+.bubble {
+  position: absolute;
+  z-index: 5;
+  top: 22px;
+  left: 50%;
+  width: max-content;
+  max-width: min(84%, 340px);
+  padding: 13px 19px;
+  border-radius: 20px;
+  background: #FFFFFF;
+  border: 2px solid rgba(168,121,89,.25);
+  box-shadow: 0 10px 24px rgba(74,45,32,.14);
+  font-weight: 700;
+  font-size: .92rem;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--brown-dark);
+  opacity: 0;
+  transform: translate(-50%, 10px) scale(.94);
+  transition: opacity .28s ease, transform .28s cubic-bezier(.2,1.4,.4,1);
+  pointer-events: none;
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -11px;
+  width: 16px;
+  height: 16px;
+  background: #FFFFFF;
+  border-right: 2px solid rgba(168,121,89,.25);
+  border-bottom: 2px solid rgba(168,121,89,.25);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.bubble.is-visible { opacity: 1; transform: translate(-50%, 0) scale(1); }
+
+/* ---------- Panel de controles ---------- */
+.side-panel { display: grid; gap: clamp(18px, 2.6vw, 26px); }
+.panel { padding: clamp(20px, 2.4vw, 28px); }
+.panel h2 {
+  margin: 0 0 6px;
+  font-size: 1.18rem;
+  color: var(--brown-dark);
+}
+.panel .hint { margin: 0 0 18px; font-size: .88rem; color: #8A6A55; line-height: 1.5; }
+
+.button-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+
+.action-btn {
+  appearance: none;
+  border: 1px solid rgba(168,121,89,.28);
+  border-radius: 16px;
+  padding: 13px 10px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF3E8 100%);
+  color: var(--brown-dark);
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  min-height: 44px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 0 rgba(168,121,89,.18), 0 8px 16px rgba(74,45,32,.08);
+  transition: transform .16s ease, box-shadow .16s ease, background .2s ease;
+}
+
+.action-btn:hover { transform: translateY(-2px); background: linear-gradient(180deg, #FFFFFF, #FFE9DA); }
+.action-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(168,121,89,.2); }
+.action-btn:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+.action-btn.is-active { background: linear-gradient(180deg, #FFF0F2, #F8D6DE); border-color: rgba(239,166,181,.7); }
+.action-btn.wide { grid-column: 1 / -1; }
+
+/* ---------- Reproductor MP3 ---------- */
+.player-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+
+.file-label {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 2px dashed rgba(168,121,89,.42);
+  background: #FFF9F2;
+  color: var(--brown-dark);
+  font-size: .84rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color .2s, background .2s;
+}
+.file-label:hover { border-color: var(--pink); background: #FFF1F3; }
+.file-label:focus-within { outline: 3px solid var(--pink); outline-offset: 2px; }
+.file-label input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+.track-name {
+  margin: 0 0 12px;
+  font-size: .84rem;
+  color: #8A6A55;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+
+.player-btn {
+  appearance: none;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  background: var(--brown);
+  color: #FFFFFF;
+  font-size: .95rem;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 5px 12px rgba(118,81,62,.25);
+  transition: transform .15s ease, background .2s ease;
+}
+.player-btn:hover { transform: scale(1.06); background: var(--brown-dark); }
+.player-btn:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+.player-btn.secondary { background: #F2E2D2; color: var(--brown-dark); box-shadow: none; }
+
+.player-btn .icon-play,
+.player-btn .icon-pause { display: block; width: 0; height: 0; }
+.player-btn .icon-play {
+  margin-left: 3px;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid currentColor;
+}
+.player-btn .icon-pause {
+  width: 11px;
+  height: 13px;
+  border-left: 4px solid currentColor;
+  border-right: 4px solid currentColor;
+}
+.player-btn[data-playing="true"] .icon-play { display: none; }
+.player-btn[data-playing="false"] .icon-pause { display: none; }
+
+.player-btn .icon-stop { width: 11px; height: 11px; background: currentColor; border-radius: 2px; }
+
+.range-row { display: grid; gap: 8px; margin-top: 10px; }
+.range-row label { font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: #9A745B; }
+input[type="range"] { width: 100%; accent-color: var(--pink); cursor: pointer; }
+
+.time-row {
+  display: flex;
+  justify-content: space-between;
+  font-variant-numeric: tabular-nums;
+  font-size: .76rem;
+  color: #9A745B;
+}
+
+.player-status { margin: 12px 0 0; font-size: .78rem; color: #8A6A55; }
+
+.footer-note {
+  margin: 26px auto 0;
+  text-align: center;
+  font-size: .78rem;
+  color: #9A745B;
+}
+
+/* ============================================================
+   ANIMACIONES SVG - puntos de giro en coordenadas del viewBox
+   ============================================================ */
+
+.plush g,
+.plush .effect { transform-box: view-box; }
+
+#group-figure { transform-origin: 210px 445px; }
+#group-tail { transform-origin: 252px 386px; }
+#group-body { transform-origin: 210px 335px; }
+#group-head { transform-origin: 210px 252px; }
+#group-left-arm { transform-origin: 143px 300px; }
+#group-right-arm { transform-origin: 277px 300px; }
+#group-left-leg { transform-origin: 175px 389px; }
+#group-right-leg { transform-origin: 245px 389px; }
+#group-eyes, #eyes-open { transform-origin: 210px 171px; }
+#group-mouth { transform-origin: 210px 235px; }
+.cheeks ellipse { transform-origin: center; transform-box: fill-box; }
+
+/* Respiración continua (excepto al dormir, bailar y estirarse) */
+.plush:not([data-state="sleep"]):not([data-state="dance"]):not([data-state="wake"]) #group-body {
+  animation: breathe 3.6s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.025, 1.045) translateY(-2px); }
+}
+
+/* Cola: balanceo suave y propio, sin invadir otros estados */
+.plush:not([data-state="sleep"]):not([data-state="dance"]):not([data-state="wake"]):not([data-state="joy"]) #group-tail {
+  animation: tail-sway 4.4s ease-in-out infinite;
+}
+@keyframes tail-sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(9deg); }
+}
+
+/* Parpadeo natural */
+.plush:not([data-state="sleep"]):not([data-state="wake"]) #eyes-open {
+  animation: blink 5.4s ease-in-out infinite;
+}
+.plush:not([data-state="sleep"]):not([data-state="wake"]) #eyes-closed {
+  animation: blink-closed 5.4s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); opacity: 1; }
+  93%, 96% { transform: scaleY(.06); opacity: .25; }
+}
+@keyframes blink-closed {
+  0%, 90%, 100% { opacity: 0; }
+  93%, 96% { opacity: 1; }
+}
+
+/* SALUDO: brazo derecho arriba y mano de lado a lado */
+.plush[data-state="wave"] #group-right-arm {
+  animation: wave-arm 2.7s ease-in-out both;
+}
+.plush[data-state="wave"] #group-head {
+  animation: wave-head 2.7s ease-in-out both;
+}
+@keyframes wave-arm {
+  0%, 100% { transform: rotate(0deg); }
+  14% { transform: rotate(-118deg); }
+  26% { transform: rotate(-133deg); }
+  38% { transform: rotate(-107deg); }
+  50% { transform: rotate(-133deg); }
+  62% { transform: rotate(-109deg); }
+  74% { transform: rotate(-130deg); }
+  86% { transform: rotate(-118deg); }
+}
+@keyframes wave-head {
+  0%, 100% { transform: rotate(0deg); }
+  20%, 80% { transform: rotate(-5deg); }
+  50% { transform: rotate(6deg); }
+}
+
+/* ABRAZO: brazos hacia adelante/lados, cabeza inclinada y cuerpo cerca */
+.plush[data-state="hug"] #group-left-arm { animation: hug-left 2.7s ease-in-out both; }
+.plush[data-state="hug"] #group-right-arm { animation: hug-right 2.7s ease-in-out both; }
+.plush[data-state="hug"] #group-head { animation: hug-head 2.7s ease-in-out both; }
+.plush[data-state="hug"] #group-figure { animation: hug-lean 2.7s ease-in-out both; }
+@keyframes hug-left {
+  0%, 100% { transform: rotate(0deg); }
+  30%, 72% { transform: rotate(48deg) translate(-4px, -8px); }
+}
+@keyframes hug-right {
+  0%, 100% { transform: rotate(0deg); }
+  30%, 72% { transform: rotate(-48deg) translate(-4px, -8px); }
+}
+@keyframes hug-head {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  30%, 72% { transform: rotate(7deg) translateY(7px); }
+}
+@keyframes hug-lean {
+  0%, 100% { transform: scale(1) translateY(0); }
+  30%, 72% { transform: scale(1.07) translateY(-5px); }
+}
+
+/* BAILE: balanceo, brazos alternos y patitas */
+.plush[data-state="dance"] #group-figure { animation: dance-body .63s ease-in-out 6 both; }
+.plush[data-state="dance"] #group-left-arm { animation: dance-left .63s ease-in-out 6 both; }
+.plush[data-state="dance"] #group-right-arm { animation: dance-right .63s ease-in-out 6 both; }
+.plush[data-state="dance"] #group-left-leg { animation: dance-leg-left .63s ease-in-out 6 both; }
+.plush[data-state="dance"] #group-right-leg { animation: dance-leg-right .63s ease-in-out 6 both; }
+.plush[data-state="dance"] #group-head { animation: dance-head .63s ease-in-out 6 both; }
+@keyframes dance-body {
+  0%, 100% { transform: rotate(-5deg) translateY(0); }
+  50% { transform: rotate(5deg) translateY(-7px); }
+}
+@keyframes dance-left {
+  0%, 100% { transform: rotate(38deg); }
+  50% { transform: rotate(-12deg); }
+}
+@keyframes dance-right {
+  0%, 100% { transform: rotate(-12deg); }
+  50% { transform: rotate(-38deg); }
+}
+@keyframes dance-leg-left {
+  0%, 100% { transform: rotate(9deg); }
+  50% { transform: rotate(-6deg); }
+}
+@keyframes dance-leg-right {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(9deg); }
+}
+@keyframes dance-head {
+  0%, 100% { transform: rotate(4deg); }
+  50% { transform: rotate(-4deg); }
+}
+.plush[data-state="dance"] #group-tail { animation: tail-dance .63s ease-in-out 6 both; }
+@keyframes tail-dance {
+  0%, 100% { transform: rotate(-16deg); }
+  50% { transform: rotate(16deg); }
+}
+
+/* DORMIR: ojos cerrados, cabeza ladeada y sin otras animaciones */
+.plush[data-state="sleep"] #group-head {
+  transform: rotate(12deg) translateY(7px);
+  animation: none !important;
+}
+.plush[data-state="sleep"] #group-body,
+.plush[data-state="sleep"] #group-figure,
+.plush[data-state="sleep"] #group-left-arm,
+.plush[data-state="sleep"] #group-right-arm,
+.plush[data-state="sleep"] #group-left-leg,
+.plush[data-state="sleep"] #group-right-leg,
+.plush[data-state="sleep"] #group-tail {
+  animation: none !important;
+}
+.plush[data-state="sleep"] #group-tail { transform: rotate(7deg); }
+.plush[data-state="sleep"] #eyes-open {
+  opacity: 0;
+  transform: scaleY(0);
+  animation: none !important;
+}
+.plush[data-state="sleep"] #eyes-closed {
+  opacity: 1;
+  animation: none !important;
+}
+
+/* DESPERTAR: ojos abiertos, cabeza derecha y estiramiento */
+.plush[data-state="wake"] #group-head { animation: wake-head 1.8s ease-out both; }
+.plush[data-state="wake"] #group-body { animation: wake-body 1.8s ease-out both; }
+.plush[data-state="wake"] #group-left-arm { animation: wake-left 1.8s ease-out both; }
+.plush[data-state="wake"] #group-right-arm { animation: wake-right 1.8s ease-out both; }
+.plush[data-state="wake"] #eyes-open { transform: scaleY(1); opacity: 1; }
+.plush[data-state="wake"] #eyes-closed { opacity: 0; }
+@keyframes wake-head {
+  0% { transform: rotate(12deg) translateY(7px); }
+  45% { transform: rotate(-7deg) translateY(-4px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+@keyframes wake-body {
+  0% { transform: scale(.97, .96); }
+  55% { transform: scale(1.06, 1.05); }
+  100% { transform: scale(1, 1); }
+}
+@keyframes wake-left {
+  0%, 100% { transform: rotate(0deg); }
+  45%, 65% { transform: rotate(72deg); }
+}
+@keyframes wake-right {
+  0%, 100% { transform: rotate(0deg); }
+  45%, 65% { transform: rotate(-72deg); }
+}
+/* La cola vuelve a su sitio sin participar del estiramiento */
+.plush[data-state="wake"] #group-tail { animation: none !important; transform: rotate(0deg); }
+
+/* ALEGRÍA: salto, mejillas brillantes y partículas */
+.plush[data-state="joy"] #group-figure { animation: jump 1.5s cubic-bezier(.3,.7,.3,1) both; }
+.plush[data-state="joy"] .cheeks ellipse { animation: cheek-glow 1.5s ease-in-out both; }
+.plush[data-state="joy"] #group-mouth { animation: happy-mouth 1.5s ease-in-out both; }
+.plush[data-state="joy"] #group-tail { animation: tail-joy 1.5s ease-in-out both; }
+@keyframes jump {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  12% { transform: translateY(5px) scale(1.06, .93); }
+  38% { transform: translateY(-38px) scale(.96, 1.06); }
+  60% { transform: translateY(0) scale(1.05, .95); }
+  76% { transform: translateY(-11px) scale(.99, 1.01); }
+}
+@keyframes cheek-glow {
+  0%, 100% { opacity: .72; }
+  35%, 70% { opacity: 1; transform: scale(1.12); }
+}
+@keyframes happy-mouth {
+  0%, 100% { transform: scaleY(1); }
+  40%, 70% { transform: scaleY(1.35); }
+}
+@keyframes tail-joy {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(-22deg); }
+  65% { transform: rotate(18deg); }
+}
+
+/* INCLINAR LA CABEZA (reacción aleatoria) */
+.plush[data-state="tilt"] #group-head { animation: curious-tilt 1.9s ease-in-out both; }
+@keyframes curious-tilt {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-13deg); }
+  55% { transform: rotate(10deg); }
+  80% { transform: rotate(-4deg); }
+}
+
+/* MÚSICA: balanceo decorativo y sutil cuando suena un MP3 */
+.plush.music-on[data-state="idle"] #group-figure,
+.plush.music-on[data-state="wave"] #group-figure,
+.plush.music-on[data-state="tilt"] #group-figure {
+  animation: music-bop 1.05s ease-in-out infinite;
+}
+.plush.music-on[data-state="idle"] .cheeks ellipse,
+.plush.music-on[data-state="wave"] .cheeks ellipse {
+  animation: music-cheeks 1.05s ease-in-out infinite;
+}
+@keyframes music-bop {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+@keyframes music-cheeks {
+  0%, 100% { opacity: .72; }
+  50% { opacity: .95; }
+}
+
+/* Partículas vectoriales (corazones y letras Z) */
+.effect {
+  transform-origin: 0 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.effect-heart {
+  animation: float-heart var(--dur, 1.6s) ease-out var(--delay, 0s) forwards;
+}
+@keyframes float-heart {
+  0% { opacity: 0; transform: translate(var(--x), var(--y)) scale(.25) rotate(-14deg); }
+  18% { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) - 120px)) scale(1.2) rotate(14deg);
+  }
+}
+.effect-z {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  fill: var(--brown-dark);
+  animation: float-z var(--dur, 2.3s) ease-out var(--delay, 0s) forwards;
+}
+@keyframes float-z {
+  0% { opacity: 0; transform: translate(var(--x), var(--y)) scale(.6) rotate(-8deg); }
+  22% { opacity: .95; }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) - 95px)) scale(1.3) rotate(10deg);
+  }
+}
+
+/* ---------- Responsive y accesibilidad ---------- */
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .side-panel { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .monkey-stage { min-height: 460px; }
+}
+
+@media (max-width: 480px) {
+  .page { padding-inline: 12px; }
+  .stage-card { padding: 10px 10px 4px; border-radius: 22px; }
+  .button-grid { grid-template-columns: 1fr; }
+  .action-btn.wide { grid-column: auto; }
+  .monkey-stage { min-height: 380px; }
+  .bubble { font-size: .82rem; top: 8px; padding: 11px 14px; }
+}
+
+/* Pantallas muy estrechas (teléfonos pequeños en vertical) */
+@media (max-width: 360px) {
+  .page-header h1 { font-size: 1.85rem; }
+  .subtitle { font-size: .88rem; }
+  .monkey-stage { min-height: 340px; }
+  .monkey-svg { width: 100%; }
+  .state-pill { font-size: .7rem; padding: 4px 9px; }
+  .bubble { max-width: 90%; font-size: .76rem; }
+  .player-controls { gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plush g,
+  .plush .effect,
+  .bubble { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
